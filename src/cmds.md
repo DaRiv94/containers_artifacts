@@ -116,9 +116,7 @@ az acr repository show-tags --name registryycv7004 --repository tripinsights/poi
 ```
 
 
----
-# Below are MY Notes
-# WORK IN PROGRESS BELOW
+
 
 
 ---
@@ -129,10 +127,12 @@ az acr repository show-tags --name registryycv7004 --repository tripinsights/poi
 docker build -f .\Trips_Dockerfile_4 -t "tripinsights/trips:1.0" ..\src\trips\
 ```
 
+
 ### Run Trips Image
 ```
-docker run -d -p 8081:80 -e "SQL_DBNAME=mydrivingDB" -e "SQL_USER=sa" -e "SQL_PASSWORD=gB4gv6Hr2" -e "SQL_SERVER=sql1" -e "OPENAPI_DOCS_URI=http://localhost:8081" tripinsights/trips:1.0
+docker run --network tripinsightsnetwork -d -p 8081:80 -e "SQL_DBNAME=mydrivingDB" -e "SQL_USER=sa" -e "SQL_PASSWORD=gB4gv6Hr2" -e "SQL_SERVER=sql1" -e "OPENAPI_DOCS_URI=http://localhost:80" tripinsights/trips:1.0
 ```
+
 ### Health Check Trips Container
 ```
 Invoke-WebRequest http://localhost:8081/api/trips/healthcheck
@@ -143,12 +143,92 @@ Invoke-WebRequest http://localhost:8081/api/trips/healthcheck
 Invoke-WebRequest http://localhost:8081/api/trips
 ```
 
+### Build POI Image to publish (NOTE: I did rename docker files)
+
+```
+docker build --no-cache --build-arg IMAGE_VERSION="1.0" --build-arg IMAGE_CREATE_DATE="$(Get-Date((Get-Date).ToUniversalTime()) -UFormat '%Y-%m-%dT%H:%M:%SZ')" --build-arg IMAGE_SOURCE_REVISION="$(git rev-parse HEAD)" -f .\Trips_Dockerfile_4 -t "registryycv7004.azurecr.io/tripinsights/trips:1.1" ..\src\trips\
+```
+
+### List acr repos
+```
+az acr repository list --name registryycv7004
+```
+
+### Push Trips Image to publish 
+
+```
+docker push registryycv7004.azurecr.io/tripinsights/trips:1.1
+```
+
+### List acr repo and then list Trips repo info
+```
+az acr repository show --name registryycv7004 --repository tripinsights/trips
+```
+
+### List acr repo and then list Trips repo tags
+```
+az acr repository show-tags --name registryycv7004 --repository tripinsights/trips
+```
+
+---
+# Below are MY Notes
+# WORK IN PROGRESS BELOW
+
+---
+# tripviewer
+
+### Build Local image
+```
+docker build -f .\Trips_Dockerfile_4 -t "tripinsights/trips:1.0" ..\src\trips\
+```
+
+
+### Run Trips Image
+```
+docker run --network tripinsightsnetwork -d -p 8081:80 -e "SQL_DBNAME=mydrivingDB" -e "SQL_USER=sa" -e "SQL_PASSWORD=gB4gv6Hr2" -e "SQL_SERVER=sql1" -e "OPENAPI_DOCS_URI=http://localhost:80" tripinsights/trips:1.0
+```
+
+### Health Check Trips Container
+```
+Invoke-WebRequest http://localhost:8081/api/trips/healthcheck
+```
+
 ### Get Data  Trips Container to double check SQL Server connection
 ```
 Invoke-WebRequest http://localhost:8081/api/trips
 ```
 
+### Build POI Image to publish (NOTE: I did rename docker files)
 
+```
+docker build --no-cache --build-arg IMAGE_VERSION="1.0" --build-arg IMAGE_CREATE_DATE="$(Get-Date((Get-Date).ToUniversalTime()) -UFormat '%Y-%m-%dT%H:%M:%SZ')" --build-arg IMAGE_SOURCE_REVISION="$(git rev-parse HEAD)" -f .\Trips_Dockerfile_4 -t "registryycv7004.azurecr.io/tripinsights/trips:1.1" ..\src\trips\
+```
+
+### List acr repos
+```
+az acr repository list --name registryycv7004
+```
+
+### Push Trips Image to publish 
+
+```
+docker push registryycv7004.azurecr.io/tripinsights/trips:1.1
+```
+
+### List acr repo and then list Trips repo info
+```
+az acr repository show --name registryycv7004 --repository tripinsights/trips
+```
+
+### List acr repo and then list Trips repo tags
+```
+az acr repository show-tags --name registryycv7004 --repository tripinsights/trips
+```
+
+
+
+
+docker run --network tripinsightsnetwork -d -p 8081:80 -e "SQL_DBNAME=mydrivingDB" -e "SQL_USER=sa" -e "SQL_PASSWORD=gB4gv6Hr2" -e "SQL_SERVER=sql1" -e "OPENAPI_DOCS_URI=http://localhost:80" tripinsights/trips:1.0
 
 
 docker build --no-cache --build-arg IMAGE_VERSION="1.0" --build-arg IMAGE_CREATE_DATE="$(Get-Date((Get-Date).ToUniversalTime()) -UFormat '%Y-%m-%dT%H:%M:%SZ')" --build-arg IMAGE_SOURCE_REVISION="$(git rev-parse HEAD)" -f Dockerfile -t "tripinsights/poi:1.0" .
