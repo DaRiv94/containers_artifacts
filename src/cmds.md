@@ -115,10 +115,6 @@ az acr repository show --name registryycv7004 --repository tripinsights/poi
 az acr repository show-tags --name registryycv7004 --repository tripinsights/poi
 ```
 
-
-
-
-
 ---
 # trips
 
@@ -170,60 +166,81 @@ az acr repository show --name registryycv7004 --repository tripinsights/trips
 az acr repository show-tags --name registryycv7004 --repository tripinsights/trips
 ```
 
+
 ---
-# Below are MY Notes
-# WORK IN PROGRESS BELOW
+# User-Java
+
+docker build -f .\User_Java_Dockerfile_0 -t "tripinsights/user-java:1.0" ..\src\user-java\
+
+docker run --network tripinsightsnetwork -d -p 8082:80 -e "SQL_DBNAME=mydrivingDB" -e "SQL_USER=sa" -e "SQL_PASSWORD=gB4gv6Hr2" -e "SQL_SERVER=sql1" tripinsights/user-java:1.0
+
+http://localhost:8082/api/user-java/healthcheck
+
+Invoke-WebRequest http://localhost:8082/api/user-java/healthcheck
+
+Postman link https://www.getpostman.com/collections/44a8fb191ff4a01bdcca
+curl.exe -i -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{ "createdAt": "2018-08-07", "deleted": false, "firstName": "Hacker2","fuelConsumption": 0,"hardAccelerations": 0,"hardStops": 0, "lastName": "Test","maxSpeed": 0,"profilePictureUri": "https://pbs.twimg.com/profile_images/1003946090146693122/IdMjh-FQ_bigger.jpg", "ranking": 0,"rating": 0, "totalDistance": 0, "totalTime": 0, "totalTrips": 0,  "updatedAt": "2018-08-07", "userId": "hacker2" }' 'http://localhost:8082/api/user-java/ab1d876a-3e37-4a7a-8c9b-769ee6217ec2'
+
+
+docker build --no-cache --build-arg IMAGE_VERSION="1.0" --build-arg IMAGE_CREATE_DATE="$(Get-Date((Get-Date).ToUniversalTime()) -UFormat '%Y-%m-%dT%H:%M:%SZ')" --build-arg IMAGE_SOURCE_REVISION="$(git rev-parse HEAD)" -f .\User_Java_Dockerfile_0 -t "registryycv7004.azurecr.io/tripinsights/user-java:1.0" ..\src\user-java\
+
+
+---
+# User Profile
+
+docker build -f .\UserProfile_Dockerfile_2 -t tripinsights/userprofile:1.0 ..\src\userprofile\
+
+docker run --network tripinsightsnetwork -d -p 8083:80  -e "SQL_DBNAME=mydrivingDB" -e "SQL_USER=sa" -e "SQL_PASSWORD=gB4gv6Hr2" -e "SQL_SERVER=sql1" tripinsights/userprofile:1.0
+
+Invoke-WebRequest http://localhost:8083/api/user/healthcheck
+
+Invoke-WebRequest http://localhost:8083/api/user
+
+docker build --no-cache --build-arg IMAGE_VERSION="1.0" --build-arg IMAGE_CREATE_DATE="$(Get-Date((Get-Date).ToUniversalTime()) -UFormat '%Y-%m-%dT%H:%M:%SZ')" --build-arg IMAGE_SOURCE_REVISION="$(git rev-parse HEAD)" -f .\UserProfile_Dockerfile_2 -t "registryycv7004.azurecr.io/tripinsights/userprofile:1.0" ..\src\userprofile\
+
+
 
 ---
 # tripviewer
 
 ### Build Local image
 ```
-docker build -f .\Trips_Dockerfile_4 -t "tripinsights/trips:1.0" ..\src\trips\
+docker build -f .\TripViewer_Dockerfile_1 -t "tripinsights/tripviewer:1.0" ..\src\tripviewer\
 ```
 
 
-### Run Trips Image
+
+### Run tripviewer Image
 ```
-docker run --network tripinsightsnetwork -d -p 8081:80 -e "SQL_DBNAME=mydrivingDB" -e "SQL_USER=sa" -e "SQL_PASSWORD=gB4gv6Hr2" -e "SQL_SERVER=sql1" -e "OPENAPI_DOCS_URI=http://localhost:80" tripinsights/trips:1.0
+docker run --network tripinsightsnetwork -d -p 8084:80 -e "TRIPS_API_ENDPOINT=strange_shtern" -e "USERPROFILE_API_ENDPOINT=focused_robinson"  tripinsights/tripviewer:1.0
 ```
 
-### Health Check Trips Container
-```
+Then go to http://localhost:8084/
+
+
+Links to navigate to for ingress
+
+Invoke-WebRequest http://localhost:8083/api/user/healthcheck
+Invoke-WebRequest http://localhost:8082/api/user-java/healthcheck
 Invoke-WebRequest http://localhost:8081/api/trips/healthcheck
-```
+Invoke-WebRequest http://localhost:8080/api/poi/healthcheck
 
-### Get Data  Trips Container to double check SQL Server connection
-```
-Invoke-WebRequest http://localhost:8081/api/trips
-```
+### build image to publish
+docker build --no-cache --build-arg IMAGE_VERSION="1.0" --build-arg IMAGE_CREATE_DATE="$(Get-Date((Get-Date).ToUniversalTime()) -UFormat '%Y-%m-%dT%H:%M:%SZ')" --build-arg IMAGE_SOURCE_REVISION="$(git rev-parse HEAD)" -f .\TripViewer_Dockerfile_1 -t "registryycv7004.azurecr.io/tripinsights/tripviewer:1.0" ..\src\tripviewer\
 
-### Build POI Image to publish (NOTE: I did rename docker files)
+------------------------------------------------
 
-```
-docker build --no-cache --build-arg IMAGE_VERSION="1.0" --build-arg IMAGE_CREATE_DATE="$(Get-Date((Get-Date).ToUniversalTime()) -UFormat '%Y-%m-%dT%H:%M:%SZ')" --build-arg IMAGE_SOURCE_REVISION="$(git rev-parse HEAD)" -f .\Trips_Dockerfile_4 -t "registryycv7004.azurecr.io/tripinsights/trips:1.1" ..\src\trips\
-```
 
-### List acr repos
-```
-az acr repository list --name registryycv7004
-```
 
-### Push Trips Image to publish 
 
-```
-docker push registryycv7004.azurecr.io/tripinsights/trips:1.1
-```
 
-### List acr repo and then list Trips repo info
-```
-az acr repository show --name registryycv7004 --repository tripinsights/trips
-```
 
-### List acr repo and then list Trips repo tags
-```
-az acr repository show-tags --name registryycv7004 --repository tripinsights/trips
-```
+
+---
+# Below are MY Notes
+# WORK IN PROGRESS BELOW
+
+
 
 
 
