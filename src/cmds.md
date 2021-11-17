@@ -230,6 +230,20 @@ docker build --no-cache --build-arg IMAGE_VERSION="1.0" --build-arg IMAGE_CREATE
 
 ------------------------------------------------
 
+### List acr repos
+```
+az acr repository list --name registryycv7004
+```
+
+### List acr repo and then list Trips repo info
+```
+az acr repository show --name registryycv7004 --repository tripinsights/trips
+```
+
+### List acr repo and then list Trips repo tags
+```
+az acr repository show-tags --name registryycv7004 --repository tripinsights/trips
+```
 
 
 

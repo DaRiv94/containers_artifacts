@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: api
+  creationTimestamp: null
+  labels:
+    app: userprofile
+  name: userprofile
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userprofile
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: userprofile
+    spec:
+      containers:
+      - image: registryycv7004.azurecr.io/tripinsights/userprofile:1.0
+        name: userprofile-container
+        ports:
+          - containerPort: 80
+        envFrom:
+          - secretRef:
+              name: sql-server-secret
+        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: api
+  creationTimestamp: null
+  labels:
+    app: userprofile
+  name: userprofile-service
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: userprofile
+  type: ClusterIP
+status:
+  loadBalancer: {}

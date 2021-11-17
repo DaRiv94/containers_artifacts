@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: api
+  creationTimestamp: null
+  labels:
+    app: userjava
+  name: userjava
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userjava
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: userjava
+    spec:
+      containers:
+      - image: registryycv7004.azurecr.io/tripinsights/user-java:1.0
+        name: userjava-container
+        ports:
+          - containerPort: 80
+        envFrom:
+          - secretRef:
+              name: sql-server-secret
+        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: api
+  creationTimestamp: null
+  labels:
+    app: userjava
+  name: userjava-service
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: userjava
+  type: ClusterIP
+status:
+  loadBalancer: {}

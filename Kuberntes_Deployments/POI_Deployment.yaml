@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: api
+  creationTimestamp: null
+  labels:
+    app: poi
+  name: poi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: poi
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: poi
+    spec:
+      containers:
+      - image: registryycv7004.azurecr.io/tripinsights/poi:1.0
+        name: poi-container
+        ports:
+          - containerPort: 80
+        env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: Production
+        envFrom:
+          - secretRef:
+              name: sql-server-secret
+        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: api
+  creationTimestamp: null
+  labels:
+    app: poi
+  name: poi-service
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: poi
+  type: ClusterIP
+status:
+  loadBalancer: {}

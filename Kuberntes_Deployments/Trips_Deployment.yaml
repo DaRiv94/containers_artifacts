@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: api
+  creationTimestamp: null
+  labels:
+    app: trips
+  name: trips
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trips
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: trips
+    spec:
+      containers:
+      - image: registryycv7004.azurecr.io/tripinsights/trips:1.1
+        name: trips-container
+        ports:
+          - containerPort: 80
+        env:
+          - name: OPENAPI_DOCS_URI
+            value: http://trips-service:80
+        envFrom:
+          - secretRef:
+              name: sql-server-secret
+        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: api
+  creationTimestamp: null
+  labels:
+    app: trips
+  name: trips-service
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: trips
+  type: ClusterIP
+status:
+  loadBalancer: {}

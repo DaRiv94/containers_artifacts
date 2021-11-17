@@ -1,0 +1,53 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: api-dev-user-full-access-role
+  namespace: api
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["*"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: api-dev-user-access-rolebinding
+  namespace: api
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: api-dev-user-full-access-role
+subjects:
+- kind: Group
+  namespace: api
+  #name: groupObjectId
+  name: "c7f32037-0d87-472d-b784-1b407b77c596"
+
+
+
+
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: api-dev-user-read-only-web-access-role
+  namespace: api
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["get","list","watch"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: api-dev-user-read-only-web-access-rolebinding
+  namespace: api
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: api-dev-user-full-access-role
+subjects:
+- kind: Group
+  namespace: api
+  #name: groupObjectId
+  name: "c7f32037-0d87-472d-b784-1b407b77c596"  

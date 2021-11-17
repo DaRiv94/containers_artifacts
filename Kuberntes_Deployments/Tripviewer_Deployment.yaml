@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: web
+  creationTimestamp: null
+  labels:
+    app: tripsviewer
+  name: tripsviewer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tripsviewer
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: tripsviewer
+    spec:
+      containers:
+      - image: registryycv7004.azurecr.io/tripinsights/tripviewer:1.0
+        name: tripsviewer-container
+        ports:
+          - containerPort: 80
+        env:
+          - name: TRIPS_API_ENDPOINT
+            value: http://trips-service.api.svc.cluster.local:80
+          - name: USERPROFILE_API_ENDPOINT
+            value: http://userprofile-service.api.svc.cluster.local:80
+        resources: {}
+        # env:
+        #   - name: TRIPS_API_ENDPOINT
+        #     value: http://trips-service:80
+        #   - name: USERPROFILE_API_ENDPOINT
+        #     value: http://userprofile-service:80
+        # resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: web
+  creationTimestamp: null
+  labels:
+    app: tripsviewer
+  name: tripsviewer-service
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 31000
+  selector:
+    app: tripsviewer
+  type: NodePort
+status:
+  loadBalancer: {}

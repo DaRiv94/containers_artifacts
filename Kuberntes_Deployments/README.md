@@ -1,0 +1,31 @@
+
+
+az aks get-credentials -g rg-akscluster -n tripsinsight-cluster
+
+az aks update -n tripsinsight-cluster -g rg-akscluster --attach-acr registryycv7004
+
+az aks update -n tripsinsight-cluster -g rg-akscluster --enable-managed-identity
+
+### Setting up Azure AAD
+https://stacksimplify.com/azure-aks/kubernetes-rbac-role-and-rolebinding-with-azure-ad/
+
+
+### Create Kubernetes Secret for SQL Server Secrets
+kubectl create secret generic  sql-server-secret --from-literal SQL_USER=sqladminyCv7004 --from-literal SQL_PASSWORD=gB4gv6Hr2 --from-literal SQL_SERVER=sqlserverycv7004.database.windows.net --from-literal SQL_DBNAME=mydrivingDB -n api
+
+
+SQL_USER	Yes	ENV or File	sqladmin	The username for the SQL Server database.
+SQL_PASSWORD	Yes	ENV or File		The password for the SQL Server database.
+SQL_SERVER	Yes	ENV or File		The server name for the SQL Server database.
+SQL_DBNAME
+
+Helpful data
+ACR Login Server: registryycv7004.azurecr.io
+ACR Username: registryycv7004
+ACR Password: 96CSAoJvJGZDtYs1GjDFA4Db5W/tZhX8
+SQL Server: sqlserverycv7004
+SQL Server Username: sqladminyCv7004
+SQL Server Password: gB4gv6Hr2
+Simulator url: simulatorregistryycv7004.westus.azurecontainer.io
+api-dev password: gC0qg2Ea4
+web-dev password: jM7fq6Mh7
