@@ -5,16 +5,48 @@ metadata:
   name: azure-kv-provider
 spec:
   provider: azure
+  secretObjects:
+    #Note that this create a secret that can then be referenced by the deployents to ingject the secrets.
+    #This  "secretObjects" param referrences objectNames that comes from the 'objects' a bit lower in this K8s Object
+   - secretName: keyvaultsecretref
+     type: Opaque
+     data:
+      - objectName: SQL_DBNAME
+        key: SQL_DBNAME
+      - objectName: SQL_SERVER
+        key: SQL_SERVER
+      - objectName: SQL_PASSWORD
+        key: SQL_PASSWORD
+      - objectName: SQL_USER
+        key: SQL_USER
   parameters:
     usePodIdentity: "false"   # We will not use pod identity for this example. We will use SP
     useVMManagedIdentity: "true"  
     userAssignedIdentityID: fdfd10f8-f097-4931-b2ef-a2fce09642ea
     keyvaultName: "OHteam4Vault"   # This is the name of KeyVault resource that we created in previous step
-    # cloudName: "AzurePublicCloud"   
+    # cloudName: "AzurePublicCloud"
+    #NOTE: The name of the secret in Azure KeyVault aligns with the 'objectName'.
+    #NOTE: the 'objectAlias' is what we we refer to when creating the secretObjects above   
     objects:  |
       array:
         - |
-          objectName: testsecret
+          objectName: testsecret 
+          objectType: secret     
+        - |
+          objectName: SQLDBNAME
+          objectAlias: SQL_DBNAME
+          objectType: secret     
+        - |
+          objectName: SQLSERVER
+          objectAlias: SQL_SERVER
+          objectType: secret     
+        - |
+          objectName: SQLPASSWORD
+          objectAlias: SQL_PASSWORD
+          objectType: secret     
+        - |
+          objectName: SQLUSER
+          objectAlias: SQL_USER
           objectType: secret     
     # resourceGroup: "keyVault"    # Resource goup that you have used to create KeyVault
     subscriptionId: "953c83d9-57a1-4f0f-8b97-ecd356e8a1f7"       
