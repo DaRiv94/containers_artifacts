@@ -1,0 +1,25 @@
+
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: api-dev-user-read-only-web-access-role
+  namespace: web
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["get","list","watch"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: api-dev-user-read-only-web-access-rolebinding
+  namespace: web
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: api-dev-user-read-only-web-access-role
+subjects:
+- kind: Group
+  namespace: web
+  #name: groupObjectId
+  name: "c7f32037-0d87-472d-b784-1b407b77c596"  

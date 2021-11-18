@@ -26,6 +26,8 @@ spec:
         env:
           - name: ASPNETCORE_ENVIRONMENT
             value: Production
+          - name: TESTENV
+            value: TESTENVVALUE
         envFrom:
           - secretRef:
               name: sql-server-secret

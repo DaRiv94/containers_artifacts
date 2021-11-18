@@ -22,12 +22,14 @@ spec:
       - image: registryycv7004.azurecr.io/tripinsights/tripviewer:1.0
         name: tripsviewer-container
         ports:
-          - containerPort: 80
+          - containerPort: 90
         env:
           - name: TRIPS_API_ENDPOINT
             value: http://trips-service.api.svc.cluster.local:80
           - name: USERPROFILE_API_ENDPOINT
             value: http://userprofile-service.api.svc.cluster.local:80
+          - name: TESTENV
+            value: TESTENVVALUE
         resources: {}
         # env:
         #   - name: TRIPS_API_ENDPOINT
@@ -35,6 +37,7 @@ spec:
         #   - name: USERPROFILE_API_ENDPOINT
         #     value: http://userprofile-service:80
         # resources: {}
+        #some comment
 ---
 apiVersion: v1
 kind: Service

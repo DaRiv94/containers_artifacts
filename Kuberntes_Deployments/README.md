@@ -1,5 +1,13 @@
 
 
+
+    apidev@msftopenhack7009ops.onmicrosoft.com
+    gC0qg2Ea4
+
+    webdev@msftopenhack7009ops.onmicrosoft.com
+    jM7fq6Mh7
+
+
 az aks get-credentials -g rg-akscluster -n tripsinsight-cluster
 
 az aks update -n tripsinsight-cluster -g rg-akscluster --attach-acr registryycv7004
@@ -12,6 +20,20 @@ https://stacksimplify.com/azure-aks/kubernetes-rbac-role-and-rolebinding-with-az
 
 ### Create Kubernetes Secret for SQL Server Secrets
 kubectl create secret generic  sql-server-secret --from-literal SQL_USER=sqladminyCv7004 --from-literal SQL_PASSWORD=gB4gv6Hr2 --from-literal SQL_SERVER=sqlserverycv7004.database.windows.net --from-literal SQL_DBNAME=mydrivingDB -n api
+
+
+### Deploying and Setting up Ingress controller Steps
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+
+helm install ingress-nginx ingress-nginx/ingress-nginx --create-namespace --namespace ingress-basic 
+
+
+
+
+
+
+
+
 
 
 SQL_USER	Yes	ENV or File	sqladmin	The username for the SQL Server database.
