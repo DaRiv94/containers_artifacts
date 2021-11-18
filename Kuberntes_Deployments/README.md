@@ -28,6 +28,12 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-basic 
 
 
+az aks show -g rg-akscluster -n tripsinsight-cluster --query "servicePrincipalProfile"
+az aks show -g rg-akscluster -n tripsinsight-cluster --query "identity"
+
+az vmss identity show -g MC_rg-akscluster_tripsinsight-cluster_westus  -n aks-agentpool-19400292-vmss -o yaml
+az vm identity show -g <resource group> -n <vm name> -o yaml
+
 
 kubectl create secret generic akv-creds -n api  --from-literal clientid=a5c08d01-0210-43fe-83ee-f89e187bdb23 --from-literal clientsecret=ab1e5887-2604-4743-959a-ef540bc93d05
 
