@@ -18,16 +18,34 @@ spec:
       labels:
         app: poi
     spec:
+      volumes:
+      - name: secrets-store01-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "azure-kv-provider"
+          # nodePublishSecretRef: 
+          #   name: akv-creds 
       containers:
       - image: registryycv7004.azurecr.io/tripinsights/poi:1.0
         name: poi-container
         ports:
           - containerPort: 80
+        volumeMounts:
+        - name: secrets-store01-inline
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
         env:
           - name: ASPNETCORE_ENVIRONMENT
             value: Production
           - name: TESTENV
             value: TESTENVVALUE
+          # - name: mysecretinpod
+            # valueFrom:
+            #   secretKeyRef:
+            #     name: mykeyvaultsecret
+            #     key: testsecret
         envFrom:
           - secretRef:
               name: sql-server-secret

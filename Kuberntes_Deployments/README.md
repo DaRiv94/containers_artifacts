@@ -25,11 +25,23 @@ kubectl create secret generic  sql-server-secret --from-literal SQL_USER=sqladmi
 ### Deploying and Setting up Ingress controller Steps
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
-helm install ingress-nginx ingress-nginx/ingress-nginx --create-namespace --namespace ingress-basic 
+helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-basic 
 
 
 
+kubectl create secret generic akv-creds -n api  --from-literal clientid=a5c08d01-0210-43fe-83ee-f89e187bdb23 --from-literal clientsecret=ab1e5887-2604-4743-959a-ef540bc93d05
 
+[1:43 PM] Jarrett Long
+clientId: a5c08d01-0210-43fe-83ee-f89e187bdb23
+
+[1:43 PM] Jarrett Long
+secretId: ab1e5887-2604-4743-959a-ef540bc93d05
+
+
+
+nodePublishSecretRef:
+
+name: akv-creds
 
 
 

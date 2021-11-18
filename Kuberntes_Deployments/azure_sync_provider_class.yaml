@@ -1,0 +1,21 @@
+apiVersion: secrets-store.csi.x-k8s.io/v1alpha1
+kind: SecretProviderClass
+metadata:
+  namespace: api
+  name: azure-kv-provider
+spec:
+  provider: azure
+  parameters:
+    usePodIdentity: "false"   # We will not use pod identity for this example. We will use SP
+    useVMManagedIdentity: "true"  
+    userAssignedIdentityID: fdfd10f8-f097-4931-b2ef-a2fce09642ea
+    keyvaultName: "OHteam4Vault"   # This is the name of KeyVault resource that we created in previous step
+    # cloudName: "AzurePublicCloud"   
+    objects:  |
+      array:
+        - |
+          objectName: testsecret
+          objectType: secret     
+    # resourceGroup: "keyVault"    # Resource goup that you have used to create KeyVault
+    subscriptionId: "953c83d9-57a1-4f0f-8b97-ecd356e8a1f7"       
+    tenantId: "e247118a-8cb2-4248-891e-e91767c260fc"     
